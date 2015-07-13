@@ -22,7 +22,13 @@ module.exports = function(grunt) {
     },
     'jasmine': {
       build: {
-        src : ['spec/js/libs/jquery/jquery.min.js', 'spec/js/libs/bootstrap/js/bootstrap.min.js', 'spec/js/libs/autotype/index.js', 'js/bootstrap-timepicker.js'],
+        src : [
+          'spec/js/libs/jquery/jquery.min.js',
+          'spec/js/libs/bootstrap/js/bootstrap.min.js',
+          'spec/js/libs/moment/moment.js',
+          'spec/js/libs/autotype/index.js',
+          'js/bootstrap-timepicker.js'
+        ],
         options: {
           specs : 'spec/js/*Spec.js',
           helpers : 'spec/js/helpers/*.js',

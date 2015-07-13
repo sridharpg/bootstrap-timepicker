@@ -29,11 +29,14 @@
     this.template = options.template;
     this.appendWidgetTo = options.appendWidgetTo;
     this.showWidgetOnAddonClick = options.showWidgetOnAddonClick;
+    this.timeFormat = options.timeFormat? options.timeFormat: this.timeFormat;
 
     this._init();
   };
 
   Timepicker.prototype = {
+
+    timeFormat: "hh:mm A",
 
     constructor: Timepicker,
     _init: function() {
@@ -487,17 +490,17 @@
 				if (this.showSeconds) {
 					setTimeout(function() {
             if (self.hour < 10) {
-              $element.setSelectionRange(8,10);
+              $element.setSelectionRange(8,15);
             } else {
-              $element.setSelectionRange(9,11);
+              $element.setSelectionRange(9,15);
             }
 					}, 0);
 				} else {
 					setTimeout(function() {
             if (self.hour < 10) {
-              $element.setSelectionRange(5,7);
+              $element.setSelectionRange(5,15);
             } else {
-              $element.setSelectionRange(6,8);
+              $element.setSelectionRange(6,15);
             }
 					}, 0);
 				}
@@ -670,6 +673,37 @@
       delete this.$element.data().timepicker;
     },
 
+    getMomentForFormattedTime: function (time) {
+      return moment(time, this.timeFormat);
+    },
+
+    getMeridian: function (time) {
+      var m = this.getMomentForFormattedTime(time);
+      return this.getMeridianOffset(m);
+    },
+
+    getMeridianForDate: function (date) {
+      var m = moment(date);
+      return this.getMeridianOffset(m);
+    },
+
+    getDefaultMeridian: function () {
+      return this.getMeridianOffset(moment(0, "h"));
+    },
+
+    getMeridianOffset: function (_moment) {
+      return _moment.format("A");
+    },
+
+    setTimeFormat: function (format) {
+      this.timeFormat = format;
+    },
+
+    isNoon: function (time) {
+      var m = this.getMomentForFormattedTime(time);
+      return m.hours() >= 12;
+    },
+
     setDefaultTime: function(defaultTime) {
       if (!this.$element.val()) {
         if (defaultTime === 'current') {
@@ -677,7 +711,7 @@
             hours = dTime.getHours(),
             minutes = dTime.getMinutes(),
             seconds = dTime.getSeconds(),
-            meridian = 'AM';
+            meridian = this.getMeridianForDate(dTime);
 
           if (seconds !== 0) {
             seconds = Math.ceil(dTime.getSeconds() / this.secondStep) * this.secondStep;
@@ -702,9 +736,6 @@
               if (hours > 12) {
                 hours = hours - 12;
               }
-              meridian = 'PM';
-            } else {
-              meridian = 'AM';
             }
           }
 
@@ -719,7 +750,7 @@
           this.hour = 0;
           this.minute = 0;
           this.second = 0;
-          this.meridian = 'AM';
+          this.meridian = this.getDefaultMeridian();
         } else {
           this.setTime(defaultTime);
         }
@@ -747,23 +778,13 @@
         second  = time.getSeconds();
 
         if (this.showMeridian){
-          meridian = 'AM';
+          meridian = this.getMeridianForDate(time);
           if (hour > 12){
-            meridian = 'PM';
             hour = hour % 12;
-          }
-
-          if (hour === 12){
-            meridian = 'PM';
           }
         }
       } else {
-        if (time.match(/p/i) !== null) {
-          meridian = 'PM';
-        } else {
-          meridian = 'AM';
-        }
-
+        meridian = this.getMeridian(time);
         time = time.replace(/[^0-9\:]/g, '');
 
         timeArray = time.split(':');
@@ -903,7 +924,10 @@
     },
 
     toggleMeridian: function() {
-      this.meridian = this.meridian === 'AM' ? 'PM' : 'AM';
+      var time = this.$element.val(),
+          m = this.getMomentForFormattedTime(time);
+
+      this.meridian = this.getMeridianOffset(m.add(12, "hours"));
     },
 
     update: function(ignoreWidget) {

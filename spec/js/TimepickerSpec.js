@@ -167,6 +167,7 @@ describe('Timepicker feature', function() {
     tp3.setTime('23:15:20');
     expect(tp3.getTime()).toBe('23:15:20');
 
+    tp1.setTimeFormat("hha");
     tp1.setTime('11pm');
     expect(tp1.getTime()).toBe('11:00 PM');
     tp3.setTime('11pm');
