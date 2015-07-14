@@ -36,7 +36,7 @@
 
   Timepicker.prototype = {
 
-    timeFormat: "hh:mm A",
+    timeFormat: 'hh:mm A',
 
     constructor: Timepicker,
     _init: function() {
@@ -688,11 +688,11 @@
     },
 
     getDefaultMeridian: function () {
-      return this.getMeridianOffset(moment(0, "h"));
+      return this.getMeridianOffset(moment(0, 'h'));
     },
 
     getMeridianOffset: function (_moment) {
-      return _moment.format("A");
+      return _moment.format('A');
     },
 
     setTimeFormat: function (format) {
@@ -785,6 +785,10 @@
         }
       } else {
         meridian = this.getMeridian(time);
+        if(meridian === 'Invalid date') {
+          //Temporary workaround
+          meridian = this.getMeridian(this.$element.val());
+        }
         time = time.replace(/[^0-9\:]/g, '');
 
         timeArray = time.split(':');
@@ -927,7 +931,7 @@
       var time = this.$element.val(),
           m = this.getMomentForFormattedTime(time);
 
-      this.meridian = this.getMeridianOffset(m.add(12, "hours"));
+      this.meridian = this.getMeridianOffset(m.add(12, 'hours'));
     },
 
     update: function(ignoreWidget) {

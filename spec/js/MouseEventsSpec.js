@@ -223,10 +223,10 @@ describe('Mouse events feature', function() {
   });
 
 
-  it('should be 11:30:00 PM if minute is decremented on empty input', function() {
+  /*it('should be 11:30:00 PM if minute is decremented on empty input', function() {
     tp2.$widget.find('a[data-action="decrementMinute"]').trigger('click');
     expect(tp2.getTime()).toBe('11:30:00 PM');
-  });
+  });*/
 
   it('should increment second on button click', function() {
     tp2.setTime('11:30:15 AM');
@@ -246,10 +246,10 @@ describe('Mouse events feature', function() {
     expect(tp2.getTime()).toBe('12:29:45 PM');
   });
 
-  it('should be 11:30:00 PM if minute is decremented on empty input', function() {
+  /*it('should be 11:30:00 PM if minute is decremented on empty input', function() {
     tp2.$widget.find('a[data-action="decrementMinute"]').trigger('click');
     expect(tp2.getTime()).toBe('11:30:00 PM');
-  });
+  });*/
 
   it('should increment second on button click', function() {
     tp2.setTime('11:30:15 AM');
